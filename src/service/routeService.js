@@ -20,5 +20,20 @@ module.exports.save = (paths) => {
   return route
 }
 
-module.exports.calcCost = (from, to) => {
+module.exports.calcCost = (routeExpect) => {
+  const route = routeStorage.get('route')
+  const routeDirections = routeExpect.split('-')
+
+  return calcCostEachDirection(route, routeDirections)
+}
+
+const calcCostEachDirection = (route, routeDirections) => {
+  if(routeDirections.length === 1) return 0
+
+  const direction = routeDirections.shift()
+  const nextRoute = route.edges[direction].filter(edge => edge.node === routeDirections[0])[0]
+
+  if(!nextRoute) throw new Error(`Not found direction from ${direction} to ${routeDirections[0]}`)
+
+  return nextRoute.weight + calcCostEachDirection(route, routeDirections)
 }
