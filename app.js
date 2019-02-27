@@ -1,9 +1,10 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const bodyParser = require('body-parser')
+const path = require('path');
+const logger = require('morgan');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'src', 'views'));
@@ -11,6 +12,7 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(bodyParser.text());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/routes', require('./src/routes'))

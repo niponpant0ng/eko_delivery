@@ -1,3 +1,5 @@
+const { save } = require('../service/routeService')
+
 module.exports = (req, res) => {
-  res.send('Save path')
+  res.json(save(req.body))
 }
