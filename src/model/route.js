@@ -1,11 +1,15 @@
 class Route {
   constructor() {
     this.edges = {};
-    this.nodes = [];
+    this.nodes = new Set();
+  }
+
+  getNodes() {
+    return [ ...this.nodes ]
   }
 
   addNode(node) {
-    this.nodes.push(node);
+    this.nodes.add(node);
     this.edges[node] = this.edges[node] || [];
   }
 
