@@ -1,4 +1,4 @@
-const { save, calcCost, calcPosibleDirection } = require('../../src/service/routeService')
+const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit } = require('../../src/service/routeService')
 
 describe('route service', () => {
   describe('save', () => {
@@ -135,6 +135,30 @@ describe('route service', () => {
       const posibleAmount = calcPosibleDirection('E-D')
 
       expect(posibleAmount).toEqual(1)
+    })
+
+    test('Should error when from or to direction are empty', () => {
+      expect(() => calcPosibleDirection()).toThrowError()
+      expect(() => calcPosibleDirection('A')).toThrowError()
+      expect(() => calcPosibleDirection('A-')).toThrowError()
+    })
+  })
+
+  describe('calcPosibleDirectionWithLimit', () => {
+    test('Should calc posible is 1 when direction from A to B not out of limit', () => {
+      save('AB1, BC2, CD3')
+
+      const posibleAmount = calcPosibleDirectionWithLimit('A-D', 4)
+
+      expect(posibleAmount).toEqual(1)
+    })
+
+    test('Should calc posible is 0 when direction from A to I out of limit', () => {
+      save('AB1, BC2, CD3, DE1, EF4, FG3, GH0, HI4')
+
+      const posibleAmount = calcPosibleDirectionWithLimit('A-I', 2)
+
+      expect(posibleAmount).toEqual(0)
     })
   })
 })

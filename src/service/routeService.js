@@ -2,8 +2,6 @@ const Route = require('../model/route')
 const NodeCache = require( "node-cache" );
 const routeStorage = new NodeCache();
 
-const isWrongCostRouteDirections = (routeDirections) => (routeDirections.length === 1) || (routeDirections.length === 2 && routeDirections[0] === routeDirections[1])
-
 module.exports.save = (paths) => {
   const route = new Route()
 
@@ -31,6 +29,20 @@ module.exports.calcCost = (routeExpect) => {
   return calcCostEachDirection(route, routeDirections)
 }
 
+module.exports.calcPosibleDirection = (routeExpect) => calcPosible(routeExpect)
+module.exports.calcPosibleDirectionWithLimit = (routeExpect, limit) => calcPosible(routeExpect, limit)
+
+const calcPosible = (routeExpect, limit = 0) => {
+  const route = routeStorage.get('route')
+  const [ from, to ] = routeExpect.split('-')
+
+  if(!from || !to) throw new Error('Wrong direction')
+
+  return calcEachPosible(to, route, limit)(from, 0)
+}
+
+const isWrongCostRouteDirections = (routeDirections) => (routeDirections.length === 1) || (routeDirections.length === 2 && routeDirections[0] === routeDirections[1])
+
 const calcCostEachDirection = (route, routeDirections) => {
   if(routeDirections.length === 1) return 0
 
@@ -42,33 +54,34 @@ const calcCostEachDirection = (route, routeDirections) => {
   return nextRoute.weight + calcCostEachDirection(route, routeDirections)
 }
 
-module.exports.calcPosibleDirection = (routeExpect) => {
-  const route = routeStorage.get('route')
-  const [ from, to ] = routeExpect.split('-')
+const calcEachPosible = (to, route, limit) => {
+  let passedNodes = {}
 
-  return calcPosible(to, route, from, {})
-}
+  const _calcPosible = (currentNode, directionLength) => {
+    let counting = 0
+    passedNodes[currentNode] = passedNodes[currentNode] || []
 
-const calcPosible = (to, route, currentNode, passedNodes) => {
-  let counting = 0
-  passedNodes[currentNode] = passedNodes[currentNode] || []
-
-  route.edges[currentNode]
-    .map(direction => direction.node)
-    .forEach(node => {
-      if(node === to) {
-        passedNodes[currentNode].push(node)
-        counting += 1
-      } else {
-        const isNotDuplicateEdgeNode = (passedNodes[currentNode].every(passedNode => passedNode !== node))
-          && (!passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode))
-
-        if(isNotDuplicateEdgeNode) {
+    route.edges[currentNode]
+      .map(direction => direction.node)
+      .forEach(node => {
+        if(node === to) {
           passedNodes[currentNode].push(node)
-          counting += calcPosible(to, route, node, passedNodes)
-        }
-      }
-    })
+          if(limit === 0 || directionLength < limit) {
+            counting += 1
+          }
+        } else {
+          const isNotDuplicateEdgeNode = (passedNodes[currentNode].every(passedNode => passedNode !== node))
+            && (!passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode))
 
-  return counting
+          if(isNotDuplicateEdgeNode) {
+            passedNodes[currentNode].push(node)
+            counting += _calcPosible(node, directionLength + 1)
+          }
+        }
+      })
+
+    return counting
+  }
+
+  return _calcPosible
 }
