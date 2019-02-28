@@ -122,5 +122,13 @@ describe('route service', () => {
 
       expect(posibleAmount).toEqual(2)
     })
+
+    test('Should calc posible is 2 when direction from A to C but some direction is not adjacent cyclic direction', () => {
+      save('EA2, AB1, AD1, AB2, BE1')
+
+      const posibleAmount = calcPosibleDirection('E-D')
+
+      expect(posibleAmount).toEqual(1)
+    })
   })
 })

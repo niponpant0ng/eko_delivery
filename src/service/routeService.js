@@ -51,20 +51,22 @@ module.exports.calcPosibleDirection = (routeExpect) => {
 
 const calcPosible = (to, route, currentNode, passedNodes) => {
   let counting = 0
-
-  if(!passedNodes[currentNode]) passedNodes[currentNode] = []
+  passedNodes[currentNode] = passedNodes[currentNode] || []
 
   route.edges[currentNode]
     .map(direction => direction.node)
     .forEach(node => {
-      passedNodes[currentNode].push(node)
-
       if(node === to) {
+        passedNodes[currentNode].push(node)
         counting += 1
       } else {
-        const isNotDuplicateEdgeNode = !passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode)
-        if(isNotDuplicateEdgeNode)
+        const isNotDuplicateEdgeNode = (passedNodes[currentNode].every(passedNode => passedNode !== node))
+          && (!passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode))
+
+        if(isNotDuplicateEdgeNode) {
+          passedNodes[currentNode].push(node)
           counting += calcPosible(to, route, node, passedNodes)
+        }
       }
     })
 
