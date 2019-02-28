@@ -106,5 +106,21 @@ describe('route service', () => {
 
       expect(posibleAmount).toEqual(2)
     })
+
+    test('Should calc posible is 2 when direction from A to C but some direction is cyclic direction', () => {
+      save('AB1, BC3, BD2, DB6, DC1')
+
+      const posibleAmount = calcPosibleDirection('A-C')
+
+      expect(posibleAmount).toEqual(2)
+    })
+
+    test('Should calc posible is 2 when direction from E to D but some node is a via direction from many node to another node', () => {
+      save('AB1, BE3, EF2, AC6, CD1, DE1')
+
+      const posibleAmount = calcPosibleDirection('A-F')
+
+      expect(posibleAmount).toEqual(2)
+    })
   })
 })

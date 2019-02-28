@@ -46,19 +46,25 @@ module.exports.calcPosibleDirection = (routeExpect) => {
   const route = routeStorage.get('route')
   const [ from, to ] = routeExpect.split('-')
 
-  return calcPosible(to, route, from)
+  return calcPosible(to, route, from, {})
 }
 
-const calcPosible = (to, route, currentNode) => {
+const calcPosible = (to, route, currentNode, passedNodes) => {
   let counting = 0
+
+  if(!passedNodes[currentNode]) passedNodes[currentNode] = []
 
   route.edges[currentNode]
     .map(direction => direction.node)
     .forEach(node => {
+      passedNodes[currentNode].push(node)
+
       if(node === to) {
         counting += 1
       } else {
-        counting += calcPosible(to, route, node)
+        const isNotDuplicateEdgeNode = !passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode)
+        if(isNotDuplicateEdgeNode)
+          counting += calcPosible(to, route, node, passedNodes)
       }
     })
 
