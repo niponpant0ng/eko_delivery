@@ -72,6 +72,12 @@ describe('route service', () => {
 
       expect(() => calcCost('A-A')).toThrow('Wrong direction')
     })
+
+    test('Should error wrong direction', () => {
+      expect(() => calcCost('A')).toThrowError()
+      expect(() => calcCost('')).toThrowError()
+      expect(() => calcCost('A-')).toThrowError()
+    })
   })
 
   describe('calcPosibleDirection', () => {

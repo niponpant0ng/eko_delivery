@@ -2,7 +2,7 @@ const Route = require('../model/route')
 const NodeCache = require( "node-cache" );
 const routeStorage = new NodeCache();
 
-const isWrongRouteDirections = (routeDirections) => routeDirections.length === 2 && routeDirections[0] === routeDirections[1]
+const isWrongCostRouteDirections = (routeDirections) => (routeDirections.length === 1) || (routeDirections.length === 2 && routeDirections[0] === routeDirections[1])
 
 module.exports.save = (paths) => {
   const route = new Route()
@@ -26,7 +26,7 @@ module.exports.calcCost = (routeExpect) => {
   const route = routeStorage.get('route')
   const routeDirections = routeExpect.split('-')
 
-  if(isWrongRouteDirections(routeDirections)) throw new Error('Wrong direction')
+  if(isWrongCostRouteDirections(routeDirections)) throw new Error('Wrong direction')
 
   return calcCostEachDirection(route, routeDirections)
 }
