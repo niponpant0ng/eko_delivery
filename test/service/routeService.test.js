@@ -66,5 +66,11 @@ describe('route service', () => {
 
       expect(() => calcCost('A-B-C')).toThrow('Not found direction from B to C')
     })
+
+    test('Should calc cost is error when from to to route is same', () => {
+      save('AB1, BE3')
+
+      expect(() => calcCost('A-A')).toThrow('Wrong direction')
+    })
   })
 })
