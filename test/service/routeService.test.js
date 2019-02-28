@@ -1,4 +1,4 @@
-const { save, calcCost } = require('../../src/service/routeService')
+const { save, calcCost, calcPosibleDirection } = require('../../src/service/routeService')
 
 describe('route service', () => {
   describe('save', () => {
@@ -71,6 +71,40 @@ describe('route service', () => {
       save('AB1, BE3')
 
       expect(() => calcCost('A-A')).toThrow('Wrong direction')
+    })
+  })
+
+  describe('calcPosibleDirection', () => {
+    test('Should calc posible is 1 when direction from A to B', () => {
+      save('AB1')
+
+      const posibleAmount = calcPosibleDirection('A-B')
+
+      expect(posibleAmount).toEqual(1)
+    })
+
+    test('Should calc posible is 1 when direction from A to E', () => {
+      save('AB1, BE3')
+
+      const posibleAmount = calcPosibleDirection('A-E')
+
+      expect(posibleAmount).toEqual(1)
+    })
+
+    test('Should calc posible is 1 when direction from A to E', () => {
+      save('AB1, BC3, CE3')
+
+      const posibleAmount = calcPosibleDirection('A-E')
+
+      expect(posibleAmount).toEqual(1)
+    })
+
+    test('Should calc posible is 2 when direction from A to C', () => {
+      save('AB1, BC3, BD2, DC1')
+
+      const posibleAmount = calcPosibleDirection('A-C')
+
+      expect(posibleAmount).toEqual(2)
     })
   })
 })

@@ -41,3 +41,26 @@ const calcCostEachDirection = (route, routeDirections) => {
 
   return nextRoute.weight + calcCostEachDirection(route, routeDirections)
 }
+
+module.exports.calcPosibleDirection = (routeExpect) => {
+  const route = routeStorage.get('route')
+  const [ from, to ] = routeExpect.split('-')
+
+  return calcPosible(to, route, from)
+}
+
+const calcPosible = (to, route, currentNode) => {
+  let counting = 0
+
+  route.edges[currentNode]
+    .map(direction => direction.node)
+    .forEach(node => {
+      if(node === to) {
+        counting += 1
+      } else {
+        counting += calcPosible(to, route, node)
+      }
+    })
+
+  return counting
+}
