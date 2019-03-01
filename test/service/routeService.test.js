@@ -1,6 +1,10 @@
-const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit, calcCheapestCost } = require('../../src/service/routeService')
+const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit, calcCheapestCost, clear } = require('../../src/service/routeService')
 
 describe('route service', () => {
+  afterEach(() => {
+    clear()    
+  })
+
   describe('save', () => {
     test('Should save route from A to B with weight is 1', () => {
       const route = save('AB10')
@@ -78,6 +82,10 @@ describe('route service', () => {
       expect(() => calcCost('')).toThrowError()
       expect(() => calcCost('A-')).toThrowError()
     })
+
+    test('Should error routes are empty', () => {
+      expect(() => calcCost('A-B')).toThrowError()
+    })
   })
 
   describe('calcPosibleDirection', () => {
@@ -142,6 +150,10 @@ describe('route service', () => {
       expect(() => calcPosibleDirection('A')).toThrowError()
       expect(() => calcPosibleDirection('A-')).toThrowError()
     })
+
+    test('Should error routes are empty', () => {
+      expect(() => calcCost('A-B')).toThrowError()
+    })
   })
 
   describe('calcPosibleDirectionWithLimit', () => {
@@ -159,6 +171,10 @@ describe('route service', () => {
       const posibleAmount = calcPosibleDirectionWithLimit('A-I', 2)
 
       expect(posibleAmount).toEqual(0)
+    })
+
+    test('Should error routes are empty', () => {
+      expect(() => calcCost('A-B')).toThrowError()
     })
   })
 
@@ -197,6 +213,10 @@ describe('route service', () => {
       save('AD2, AB1, BC2, CD3, DA1')
 
       expect(() => calcCheapestCost('A-G')).toThrowError()
+    })
+
+    test('Should error routes are empty', () => {
+      expect(() => calcCost('A-B')).toThrowError()
     })
   })
 })

@@ -24,6 +24,7 @@ module.exports.calcCost = (routeExpect) => {
   const route = routeStorage.get('route')
   const routeDirections = routeExpect.split('-')
 
+  if(!route) throw new Error('Routes are empty')
   if(isWrongCostRouteDirections(routeDirections)) throw new Error('Wrong direction')
 
   return calcCostEachDirection(route, routeDirections)
@@ -36,6 +37,7 @@ const calcPosible = (routeExpect, limit = 0) => {
   const route = routeStorage.get('route')
   const [ from, to ] = routeExpect.split('-')
 
+  if(!route) throw new Error('Routes are empty')
   if(!from || !to) throw new Error('Wrong direction')
 
   return calcEachPosible(to, route, limit)(from, 0)
@@ -90,6 +92,7 @@ module.exports.calcCheapestCost = (routeExpect) => {
   const route = routeStorage.get('route')
   const [ from, to ] = routeExpect.split('-')
 
+  if(!route) throw new Error('Routes are empty')
   if(!from || !to) {
     throw new Error('Wrong direction')
   }
@@ -128,3 +131,5 @@ const calcEachCheapestCost = (from, to, route) => {
 
   return calcCosting(from, 0)
 }
+
+module.exports.clear = () => routeStorage.set('route', [])
