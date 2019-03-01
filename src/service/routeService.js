@@ -8,7 +8,7 @@ module.exports.save = (paths) => {
   paths.split(', ').forEach(path => {
     const nodeFrom = path.substring(0, 1)
     const nodeTo = path.substring(1, 2)
-    const weight = parseInt(path.substring(2, 3))
+    const weight = parseInt(path.substring(2))
 
     route.addNode(nodeFrom)
     route.addNode(nodeTo)

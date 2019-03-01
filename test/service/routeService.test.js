@@ -3,13 +3,13 @@ const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit, cal
 describe('route service', () => {
   describe('save', () => {
     test('Should save route from A to B with weight is 1', () => {
-      const route = save('AB1')
+      const route = save('AB10')
 
       expect(route.getNodes()).toEqual(
         expect.arrayContaining(['A', 'B'])
       )
       expect(route.adjacent("A")).toHaveLength(1)
-      expect(route.adjacent("A")[0]).toMatchObject({ node: 'B', weight: 1 })
+      expect(route.adjacent("A")[0]).toMatchObject({ node: 'B', weight: 10 })
     })
 
     test('Should save route from A to B with weight is 1 and from C to D with weight is 3', () => {
