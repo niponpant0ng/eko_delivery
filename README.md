@@ -15,7 +15,7 @@ I provide restful api to access these api following these
  POST /routes
  AB1, AC4, AD10, BE3, CD4, CF2
 
-    \* content-type is **text/plain**
+    * content-type is **text/plain**
 ***
 2. Get cost from route to another route
 
