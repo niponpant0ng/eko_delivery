@@ -1,4 +1,4 @@
-const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit } = require('../../src/service/routeService')
+const { save, calcCost, calcPosibleDirection, calcPosibleDirectionWithLimit, calcCheapestCost } = require('../../src/service/routeService')
 
 describe('route service', () => {
   describe('save', () => {
@@ -159,6 +159,44 @@ describe('route service', () => {
       const posibleAmount = calcPosibleDirectionWithLimit('A-I', 2)
 
       expect(posibleAmount).toEqual(0)
+    })
+  })
+
+  describe('calcCheapestCost', () => {
+    test('Should calc cost is 6 when direction from A to D', () => {
+      save('AB1, BC2, CD3')
+
+      const posibleAmount = calcCheapestCost('A-D')
+
+      expect(posibleAmount).toEqual(6)
+    })
+
+    test('Should calc cost is 2 when there are direction from A to D', () => {
+      save('AD2, AB1, BC2, CD3')
+
+      const posibleAmount = calcCheapestCost('A-D')
+
+      expect(posibleAmount).toEqual(2)
+    })
+
+    test('Should calc cost is 2 when there are direction from A to D and some direction is cyclic direction', () => {
+      save('AD2, AB1, BC2, CD3, DA1')
+
+      const posibleAmount = calcCheapestCost('A-D')
+
+      expect(posibleAmount).toEqual(2)
+    })
+
+    test('Should error wrong direction', () => {
+      expect(() => calcCheapestCost('A')).toThrowError()
+      expect(() => calcCheapestCost('')).toThrowError()
+      expect(() => calcCheapestCost('A-')).toThrowError()
+    })
+
+    test('Should error when there is not direction to reach to to node', () => {
+      save('AD2, AB1, BC2, CD3, DA1')
+
+      expect(() => calcCheapestCost('A-G')).toThrowError()
     })
   })
 })

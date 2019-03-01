@@ -85,3 +85,46 @@ const calcEachPosible = (to, route, limit) => {
 
   return _calcPosible
 }
+
+module.exports.calcCheapestCost = (routeExpect) => {
+  const route = routeStorage.get('route')
+  const [ from, to ] = routeExpect.split('-')
+
+  if(!from || !to) {
+    throw new Error('Wrong direction')
+  }
+
+  const costings = calcEachCheapestCost(from, to, route)
+  if(!costings.length) {
+    throw new Error("Can't found cost to to node")
+  }
+
+  return Math.min(...costings)
+}
+
+const calcEachCheapestCost = (from, to, route) => {
+  let passedNodes = {}
+  let costings = []
+
+  const calcCosting = (currentNode, cost) => {
+    passedNodes[currentNode] = passedNodes[currentNode] || []
+
+    route.edges[currentNode].forEach(({ node, weight }) => {
+      if(node === to) {
+        costings.push(cost + weight)
+      } else {
+        const isNotDuplicateEdgeNode = (passedNodes[currentNode].every(passedNode => passedNode !== node))
+          && (!passedNodes[node] || passedNodes[node].every(passedNode => passedNode !== currentNode))
+
+        if(isNotDuplicateEdgeNode) {
+          passedNodes[currentNode].push(node)
+          calcCosting(node, cost + weight)
+        }
+      }
+    })
+
+    return costings
+  }
+
+  return calcCosting(from, 0)
+}
