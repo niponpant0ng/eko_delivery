@@ -1,4 +1,9 @@
 EKO Delivery
+
+How to run it
+1. run **npm install** to install dependency package
+2. run **node start** to run a server with default port is 3000
+
 I provide restful api to access these api following these
 ***
 1. Create route with cost from route to another route
@@ -24,4 +29,9 @@ GET /routes/A-B
 GET /routes/**FROM-TO**/limit/**limit**
 ex.
 GET /routes/A-B/limit/3
+***
+5. Get cheapest cost from route to another route
+GET /routes/cheapest/**FROM-TO**
+ex.
+GET /routes/cheapest/A-B
 ***
